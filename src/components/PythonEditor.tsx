@@ -32,23 +32,44 @@ export function PythonEditor({
   useEffect(() => {
     // Load Skulpt dynamically
     const loadSkulpt = () => {
-      if (window.Sk) return;
+      if (window.Sk) {
+        console.log('Skulpt already loaded');
+        return;
+      }
       
+      console.log('Loading Skulpt...');
       const script1 = document.createElement('script');
       script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/skulpt/0.11.1/skulpt.min.js';
-      
-      const script2 = document.createElement('script');
-      script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/skulpt/0.11.1/skulpt-stdlib.js';
+      script1.onload = () => {
+        console.log('Skulpt main script loaded');
+        const script2 = document.createElement('script');
+        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/skulpt/0.11.1/skulpt-stdlib.js';
+        script2.onload = () => {
+          console.log('Skulpt stdlib loaded, Python ready!');
+        };
+        script2.onerror = () => {
+          console.error('Failed to load Skulpt stdlib');
+        };
+        document.head.appendChild(script2);
+      };
+      script1.onerror = () => {
+        console.error('Failed to load Skulpt main script');
+      };
       
       document.head.appendChild(script1);
-      document.head.appendChild(script2);
     };
 
     loadSkulpt();
   }, []);
 
   const runCode = async () => {
-    if (!window.Sk || isRunning) return;
+    console.log('Skulpt available:', !!window.Sk, 'isRunning:', isRunning);
+    if (!window.Sk || isRunning) {
+      if (!window.Sk) {
+        setOutput('Error: Python interpreter is still loading. Please wait a moment and try again.');
+      }
+      return;
+    }
     
     setIsRunning(true);
     setOutput('');

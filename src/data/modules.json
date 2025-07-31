@@ -1,0 +1,250 @@
+{
+  "modules": [
+    {
+      "id": 1,
+      "title": "Python Thinking for Devs",
+      "description": "Internalize Pythonic syntax and idioms",
+      "icon": "🐍",
+      "color": "python-blue",
+      "lessons": [
+        {
+          "id": "1-1",
+          "title": "List/Dict/Set Comprehensions",
+          "theory": "Python comprehensions are powerful one-liners that replace loops. They're more readable and often faster than traditional loops.",
+          "example": "# List comprehension\nsquares = [x**2 for x in range(10)]\n\n# Dict comprehension\nword_lengths = {word: len(word) for word in ['python', 'is', 'awesome']}\n\n# Set comprehension\nunique_lengths = {len(word) for word in ['hello', 'world', 'hello']}",
+          "tasks": [
+            {
+              "id": "1-1-1",
+              "description": "Convert this nested loop into a list comprehension",
+              "starter_code": "# Convert this to a list comprehension\nresult = []\nfor i in range(5):\n    for j in range(3):\n        if i * j > 3:\n            result.append(i * j)\n\nprint(result)",
+              "solution": "# List comprehension solution\nresult = [i * j for i in range(5) for j in range(3) if i * j > 3]\nprint(result)"
+            },
+            {
+              "id": "1-1-2", 
+              "description": "Create a dict comprehension mapping words to their lengths",
+              "starter_code": "words = ['python', 'programming', 'is', 'fun']\n# Create a dictionary mapping each word to its length\n# Your code here",
+              "solution": "words = ['python', 'programming', 'is', 'fun']\nword_lengths = {word: len(word) for word in words}\nprint(word_lengths)"
+            }
+          ]
+        },
+        {
+          "id": "1-2",
+          "title": "Collections Module Power",
+          "theory": "The collections module provides specialized container datatypes like Counter, defaultdict, and deque that make common operations easier.",
+          "example": "from collections import Counter, defaultdict\n\n# Counter for frequency counting\ntext = 'hello world'\nletter_count = Counter(text)\nprint(letter_count)  # Counter({'l': 3, 'o': 2, ...})\n\n# defaultdict for grouping\ndd = defaultdict(list)\nfor word in ['apple', 'banana', 'apricot']:\n    dd[word[0]].append(word)",
+          "tasks": [
+            {
+              "id": "1-2-1",
+              "description": "Use Counter to find the most common words",
+              "starter_code": "from collections import Counter\n\ntext = \"python is great python is powerful python is fun\"\nwords = text.split()\n\n# Find the 2 most common words\n# Your code here",
+              "solution": "from collections import Counter\n\ntext = \"python is great python is powerful python is fun\"\nwords = text.split()\n\ncounter = Counter(words)\nmost_common = counter.most_common(2)\nprint(most_common)"
+            }
+          ]
+        }
+      ],
+      "project": {
+        "title": "Folder Organizer",
+        "description": "Build a script that organizes files in a directory by type or date",
+        "starter_code": "import os\nimport shutil\nfrom pathlib import Path\nfrom datetime import datetime\n\ndef organize_files(directory):\n    \"\"\"\n    Organize files in directory by extension\n    \"\"\"\n    # Your implementation here\n    pass\n\n# Test with current directory\norganize_files('.')",
+        "solution": "import os\nimport shutil\nfrom pathlib import Path\nfrom datetime import datetime\n\ndef organize_files(directory):\n    path = Path(directory)\n    \n    for file_path in path.iterdir():\n        if file_path.is_file():\n            extension = file_path.suffix.lower()\n            if extension:\n                folder_name = extension[1:]  # Remove the dot\n                folder_path = path / folder_name\n                folder_path.mkdir(exist_ok=True)\n                \n                new_path = folder_path / file_path.name\n                print(f\"Moving {file_path.name} to {folder_name}/\")\n                # shutil.move(str(file_path), str(new_path))\n\norganize_files('.')"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Automating Real Life",
+      "description": "Write CLI tools and automation scripts",
+      "icon": "🤖",
+      "color": "python-green",
+      "lessons": [
+        {
+          "id": "2-1",
+          "title": "Command Line Arguments",
+          "theory": "argparse makes it easy to create professional command-line interfaces for your Python scripts.",
+          "example": "import argparse\n\nparser = argparse.ArgumentParser(description='Process some files.')\nparser.add_argument('filename', help='File to process')\nparser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')\nargs = parser.parse_args()\n\nprint(f\"Processing {args.filename}\")\nif args.verbose:\n    print(\"Verbose mode enabled\")",
+          "tasks": [
+            {
+              "id": "2-1-1",
+              "description": "Create a CLI that takes a name and greeting type",
+              "starter_code": "import argparse\n\n# Create a parser that takes:\n# - A required 'name' argument\n# - An optional '--greeting' argument (default: 'Hello')\n# Print the greeting with the name\n\n# Your code here",
+              "solution": "import argparse\n\nparser = argparse.ArgumentParser(description='Greet someone')\nparser.add_argument('name', help='Name to greet')\nparser.add_argument('--greeting', default='Hello', help='Type of greeting')\n\n# In a real script, you'd use:\n# args = parser.parse_args()\n# For demo, let's simulate:\nclass Args:\n    name = 'World'\n    greeting = 'Hello'\n\nargs = Args()\nprint(f\"{args.greeting}, {args.name}!\")"
+            }
+          ]
+        }
+      ],
+      "project": {
+        "title": "Media Downloader CLI",
+        "description": "Create a CLI tool that downloads files from URLs",
+        "starter_code": "import argparse\nimport requests\nfrom pathlib import Path\n\ndef download_file(url, output_dir='downloads'):\n    \"\"\"\n    Download a file from URL to output directory\n    \"\"\"\n    # Your implementation here\n    pass\n\ndef main():\n    parser = argparse.ArgumentParser(description='Download files from URLs')\n    parser.add_argument('urls', nargs='+', help='URLs to download')\n    parser.add_argument('--output', '-o', default='downloads', help='Output directory')\n    \n    # args = parser.parse_args()\n    # For demo:\n    urls = ['https://httpbin.org/json']\n    output = 'downloads'\n    \n    for url in urls:\n        download_file(url, output)\n\nif __name__ == '__main__':\n    main()",
+        "solution": "import argparse\nimport requests\nfrom pathlib import Path\nfrom urllib.parse import urlparse\n\ndef download_file(url, output_dir='downloads'):\n    try:\n        response = requests.get(url)\n        response.raise_for_status()\n        \n        # Extract filename from URL\n        parsed_url = urlparse(url)\n        filename = Path(parsed_url.path).name or 'downloaded_file'\n        \n        # Create output directory\n        output_path = Path(output_dir)\n        output_path.mkdir(exist_ok=True)\n        \n        # Save file\n        file_path = output_path / filename\n        with open(file_path, 'wb') as f:\n            f.write(response.content)\n            \n        print(f\"Downloaded: {filename}\")\n        \n    except Exception as e:\n        print(f\"Error downloading {url}: {e}\")\n\ndef main():\n    # Simulate download\n    print(\"Demo: Would download files to 'downloads/' directory\")\n    download_file('https://httpbin.org/json')\n\nif __name__ == '__main__':\n    main()"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Web and APIs",
+      "description": "Work with APIs and scrape websites",
+      "icon": "🌐",
+      "color": "python-blue",
+      "lessons": [
+        {
+          "id": "3-1",
+          "title": "Making HTTP Requests",
+          "theory": "The requests library makes it easy to work with HTTP APIs, handle authentication, and parse responses.",
+          "example": "import requests\n\n# GET request\nresponse = requests.get('https://httpbin.org/json')\ndata = response.json()\nprint(data)\n\n# POST request with data\npayload = {'key': 'value'}\nresponse = requests.post('https://httpbin.org/post', json=payload)\nprint(response.status_code)",
+          "tasks": [
+            {
+              "id": "3-1-1",
+              "description": "Fetch data from a public API and extract specific fields",
+              "starter_code": "import requests\n\n# Fetch data from JSONPlaceholder API\n# Get all posts and print the titles of first 5 posts\nurl = 'https://jsonplaceholder.typicode.com/posts'\n\n# Your code here",
+              "solution": "import requests\n\nurl = 'https://jsonplaceholder.typicode.com/posts'\nresponse = requests.get(url)\n\nif response.status_code == 200:\n    posts = response.json()\n    for post in posts[:5]:\n        print(f\"Post {post['id']}: {post['title']}\")\nelse:\n    print(f\"Error: {response.status_code}\")"
+            }
+          ]
+        }
+      ],
+      "project": {
+        "title": "News Aggregator CLI",
+        "description": "Build a CLI app that fetches and summarizes news headlines",
+        "starter_code": "import requests\nimport json\nfrom datetime import datetime\n\ndef fetch_news(category='technology'):\n    \"\"\"\n    Fetch news headlines from a public API\n    For demo, we'll use JSONPlaceholder\n    \"\"\"\n    # In real implementation, use NewsAPI\n    # url = f'https://newsapi.org/v2/top-headlines?category={category}&apiKey=YOUR_KEY'\n    \n    # Demo with JSONPlaceholder\n    url = 'https://jsonplaceholder.typicode.com/posts'\n    \n    # Your implementation here\n    pass\n\ndef display_headlines(articles):\n    \"\"\"\n    Display headlines in a nice format\n    \"\"\"\n    # Your implementation here\n    pass\n\nif __name__ == '__main__':\n    articles = fetch_news()\n    display_headlines(articles)",
+        "solution": "import requests\nimport json\nfrom datetime import datetime\n\ndef fetch_news(category='technology'):\n    # Demo with JSONPlaceholder (simulating news API)\n    url = 'https://jsonplaceholder.typicode.com/posts'\n    \n    try:\n        response = requests.get(url)\n        response.raise_for_status()\n        return response.json()[:10]  # Get first 10 as \"headlines\"\n    except Exception as e:\n        print(f\"Error fetching news: {e}\")\n        return []\n\ndef display_headlines(articles):\n    print(f\"📰 Tech Headlines - {datetime.now().strftime('%Y-%m-%d %H:%M')}\")\n    print(\"=\" * 50)\n    \n    for i, article in enumerate(articles, 1):\n        title = article.get('title', 'No title')\n        print(f\"{i:2d}. {title.capitalize()}\")\n    \n    print(\"=\" * 50)\n    print(f\"Total articles: {len(articles)}\")\n\nif __name__ == '__main__':\n    articles = fetch_news()\n    display_headlines(articles)"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Data Wrangling with Pandas",
+      "description": "Manipulate and analyze structured data",
+      "icon": "📊",
+      "color": "python-green",
+      "lessons": [
+        {
+          "id": "4-1",
+          "title": "DataFrame Basics",
+          "theory": "Pandas DataFrames are like Excel spreadsheets in Python. You can load, clean, filter, and analyze structured data easily.",
+          "example": "import pandas as pd\n\n# Create a DataFrame\ndata = {'name': ['Alice', 'Bob', 'Charlie'],\n        'age': [25, 30, 35],\n        'salary': [50000, 60000, 70000]}\ndf = pd.DataFrame(data)\n\n# Basic operations\nprint(df.head())\nprint(df.describe())\nfiltered = df[df['age'] > 25]",
+          "tasks": [
+            {
+              "id": "4-1-1",
+              "description": "Create and analyze a DataFrame",
+              "starter_code": "import pandas as pd\n\n# Sample data\ndata = {\n    'product': ['Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Laptop'],\n    'price': [1000, 25, 75, 300, 1200],\n    'quantity': [5, 50, 30, 10, 3]\n}\n\n# Create DataFrame and calculate total value for each product\n# Your code here",
+              "solution": "import pandas as pd\n\ndata = {\n    'product': ['Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Laptop'],\n    'price': [1000, 25, 75, 300, 1200],\n    'quantity': [5, 50, 30, 10, 3]\n}\n\ndf = pd.DataFrame(data)\ndf['total_value'] = df['price'] * df['quantity']\n\nprint(\"Product DataFrame:\")\nprint(df)\nprint(f\"\\nTotal inventory value: ${df['total_value'].sum():,.2f}\")"
+            }
+          ]
+        }
+      ],
+      "project": {
+        "title": "CSV Reporter",
+        "description": "Build a CLI tool that analyzes any CSV file and generates insights",
+        "starter_code": "import pandas as pd\nimport argparse\nfrom pathlib import Path\n\ndef analyze_csv(filepath):\n    \"\"\"\n    Analyze a CSV file and return insights\n    \"\"\"\n    try:\n        df = pd.read_csv(filepath)\n        \n        # Your analysis here\n        insights = {\n            'shape': df.shape,\n            'columns': list(df.columns),\n            'dtypes': df.dtypes.to_dict(),\n            'missing': df.isnull().sum().to_dict(),\n            'summary': df.describe().to_dict()\n        }\n        \n        return insights\n    except Exception as e:\n        return {'error': str(e)}\n\ndef display_insights(insights):\n    \"\"\"\n    Display insights in a readable format\n    \"\"\"\n    # Your formatting here\n    pass\n\nif __name__ == '__main__':\n    # Demo with sample data\n    sample_data = pd.DataFrame({\n        'name': ['Alice', 'Bob', 'Charlie'],\n        'age': [25, 30, 35],\n        'salary': [50000, 60000, 70000]\n    })\n    \n    # Save sample and analyze\n    sample_data.to_csv('sample.csv', index=False)\n    insights = analyze_csv('sample.csv')\n    display_insights(insights)",
+        "solution": "import pandas as pd\nimport argparse\nfrom pathlib import Path\n\ndef analyze_csv(filepath):\n    try:\n        df = pd.read_csv(filepath)\n        \n        insights = {\n            'shape': df.shape,\n            'columns': list(df.columns),\n            'dtypes': df.dtypes.to_dict(),\n            'missing': df.isnull().sum().to_dict(),\n            'numeric_summary': df.describe().to_dict() if len(df.select_dtypes(include='number').columns) > 0 else {}\n        }\n        \n        return insights\n    except Exception as e:\n        return {'error': str(e)}\n\ndef display_insights(insights):\n    if 'error' in insights:\n        print(f\"❌ Error: {insights['error']}\")\n        return\n    \n    print(\"📊 CSV Analysis Report\")\n    print(\"=\" * 40)\n    print(f\"📏 Shape: {insights['shape'][0]} rows × {insights['shape'][1]} columns\")\n    print(f\"📋 Columns: {', '.join(insights['columns'])}\")\n    \n    print(\"\\n🔍 Data Types:\")\n    for col, dtype in insights['dtypes'].items():\n        print(f\"  {col}: {dtype}\")\n    \n    missing = {k: v for k, v in insights['missing'].items() if v > 0}\n    if missing:\n        print(\"\\n❗ Missing Values:\")\n        for col, count in missing.items():\n            print(f\"  {col}: {count}\")\n    else:\n        print(\"\\n✅ No missing values\")\n\nif __name__ == '__main__':\n    # Demo with sample data\n    sample_data = pd.DataFrame({\n        'name': ['Alice', 'Bob', 'Charlie'],\n        'age': [25, 30, 35],\n        'salary': [50000, 60000, 70000]\n    })\n    \n    sample_data.to_csv('sample.csv', index=False)\n    insights = analyze_csv('sample.csv')\n    display_insights(insights)\n    \n    # Clean up\n    Path('sample.csv').unlink(missing_ok=True)"
+      }
+    },
+    {
+      "id": 5,
+      "title": "AI & OpenAI Scripting",
+      "description": "Build LLM-based tools using Python",
+      "icon": "🤖",
+      "color": "python-yellow",
+      "lessons": [
+        {
+          "id": "5-1",
+          "title": "OpenAI API Basics",
+          "theory": "The OpenAI API allows you to integrate powerful language models into your Python applications for text generation, analysis, and more.",
+          "example": "# Note: This is a demo example\n# In real usage, you'd need: pip install openai\n\nclass MockOpenAI:\n    def chat_completions_create(self, messages, model=\"gpt-3.5-turbo\"):\n        # Mock response for demo\n        return {\n            'choices': [{\n                'message': {\n                    'content': f\"Mock response to: {messages[-1]['content']}\"\n                }\n            }]\n        }\n\nclient = MockOpenAI()\nresponse = client.chat_completions_create([\n    {\"role\": \"user\", \"content\": \"Hello, AI!\"}\n])\nprint(response['choices'][0]['message']['content'])",
+          "tasks": [
+            {
+              "id": "5-1-1",
+              "description": "Create a simple chat function",
+              "starter_code": "# Mock OpenAI client for demo\nclass MockOpenAI:\n    def chat_completions_create(self, messages, model=\"gpt-3.5-turbo\"):\n        user_msg = messages[-1]['content'].lower()\n        if 'python' in user_msg:\n            return {'choices': [{'message': {'content': 'Python is a great programming language!'}}]}\n        elif 'hello' in user_msg:\n            return {'choices': [{'message': {'content': 'Hello! How can I help you today?'}}]}\n        else:\n            return {'choices': [{'message': {'content': f'You said: {messages[-1][\"content\"]}'}}]}\n\ndef chat_with_ai(prompt):\n    \"\"\"\n    Send a prompt to AI and return response\n    \"\"\"\n    # Your implementation here\n    pass\n\n# Test the function\nresponse = chat_with_ai(\"What is Python?\")\nprint(response)",
+              "solution": "class MockOpenAI:\n    def chat_completions_create(self, messages, model=\"gpt-3.5-turbo\"):\n        user_msg = messages[-1]['content'].lower()\n        if 'python' in user_msg:\n            return {'choices': [{'message': {'content': 'Python is a great programming language!'}}]}\n        elif 'hello' in user_msg:\n            return {'choices': [{'message': {'content': 'Hello! How can I help you today?'}}]}\n        else:\n            return {'choices': [{'message': {'content': f'You said: {messages[-1][\"content\"]}'}}]}\n\ndef chat_with_ai(prompt):\n    client = MockOpenAI()\n    messages = [{\"role\": \"user\", \"content\": prompt}]\n    \n    response = client.chat_completions_create(messages)\n    return response['choices'][0]['message']['content']\n\n# Test the function\nresponse = chat_with_ai(\"What is Python?\")\nprint(f\"AI: {response}\")"
+            }
+          ]
+        }
+      ],
+      "project": {
+        "title": "Mini AI Assistant",
+        "description": "Create a CLI tool that can answer questions about documents",
+        "starter_code": "class MockOpenAI:\n    def chat_completions_create(self, messages, model=\"gpt-3.5-turbo\"):\n        # Mock intelligent responses based on context\n        context = messages[0]['content'] if len(messages) > 1 else \"\"\n        question = messages[-1]['content']\n        \n        if 'summarize' in question.lower():\n            return {'choices': [{'message': {'content': 'This document discusses programming concepts and best practices.'}}]}\n        else:\n            return {'choices': [{'message': {'content': f'Based on the document, {question} relates to the main topics covered.'}}]}\n\ndef load_document(filepath):\n    \"\"\"\n    Load and return document content\n    \"\"\"\n    # Your implementation here\n    pass\n\ndef ask_question(document_content, question):\n    \"\"\"\n    Ask a question about the document\n    \"\"\"\n    # Your implementation here\n    pass\n\ndef main():\n    # Demo with sample content\n    sample_doc = \"Python is a versatile programming language...\"\n    \n    question = \"What is this document about?\"\n    answer = ask_question(sample_doc, question)\n    print(f\"Q: {question}\")\n    print(f\"A: {answer}\")\n\nif __name__ == '__main__':\n    main()",
+        "solution": "class MockOpenAI:\n    def chat_completions_create(self, messages, model=\"gpt-3.5-turbo\"):\n        context = messages[0]['content'] if len(messages) > 1 else \"\"\n        question = messages[-1]['content']\n        \n        if 'summarize' in question.lower():\n            return {'choices': [{'message': {'content': 'This document discusses programming concepts and Python best practices.'}}]}\n        elif 'about' in question.lower():\n            return {'choices': [{'message': {'content': 'This document covers Python programming fundamentals and practical applications.'}}]}\n        else:\n            return {'choices': [{'message': {'content': f'Based on the document context, the answer relates to Python programming concepts.'}}]}\n\ndef load_document(filepath):\n    try:\n        with open(filepath, 'r', encoding='utf-8') as file:\n            return file.read()\n    except FileNotFoundError:\n        return \"Document not found.\"\n    except Exception as e:\n        return f\"Error reading document: {e}\"\n\ndef ask_question(document_content, question):\n    client = MockOpenAI()\n    \n    messages = [\n        {\"role\": \"system\", \"content\": f\"Document content: {document_content[:1000]}...\"},\n        {\"role\": \"user\", \"content\": question}\n    ]\n    \n    response = client.chat_completions_create(messages)\n    return response['choices'][0]['message']['content']\n\ndef main():\n    print(\"🤖 Mini AI Assistant\")\n    print(\"=\" * 30)\n    \n    # Demo with sample content\n    sample_doc = \"\"\"Python is a versatile programming language known for its simplicity and readability. \n    It's widely used in web development, data science, artificial intelligence, and automation. \n    Python's extensive library ecosystem makes it perfect for rapid prototyping and production applications.\"\"\"\n    \n    questions = [\n        \"What is this document about?\",\n        \"What are Python's main uses?\",\n        \"Can you summarize the key points?\"\n    ]\n    \n    for question in questions:\n        answer = ask_question(sample_doc, question)\n        print(f\"\\nQ: {question}\")\n        print(f\"A: {answer}\")\n\nif __name__ == '__main__':\n    main()"
+      }
+    }
+  ],
+  "challenges": [
+    {
+      "id": "c1",
+      "title": "Folder Duplicator",
+      "description": "Create a script that duplicates a folder structure",
+      "focus": "File I/O, os, shutil",
+      "difficulty": "Easy"
+    },
+    {
+      "id": "c2", 
+      "title": "Local Weather App",
+      "description": "Build a CLI weather app using a public API",
+      "focus": "requests, APIs",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "c3",
+      "title": "PDF Merger GUI",
+      "description": "Create a simple GUI to merge PDF files",
+      "focus": "tkinter, PyPDF2",
+      "difficulty": "Hard"
+    },
+    {
+      "id": "c4",
+      "title": "URL Shortener CLI",
+      "description": "Build a command-line URL shortener",
+      "focus": "API + argparse",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "c5",
+      "title": "Budget Tracker",
+      "description": "Create a personal budget tracking application",
+      "focus": "pandas, CSV I/O",
+      "difficulty": "Hard"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "first_script",
+      "title": "First Script",
+      "description": "Complete your first Python exercise",
+      "icon": "🐍",
+      "condition": "complete_task"
+    },
+    {
+      "id": "api_tamer",
+      "title": "API Tamer",
+      "description": "Successfully make your first API call",
+      "icon": "🌐",
+      "condition": "complete_module_3"
+    },
+    {
+      "id": "data_whisperer",
+      "title": "Data Whisperer", 
+      "description": "Master pandas data manipulation",
+      "icon": "📊",
+      "condition": "complete_module_4"
+    },
+    {
+      "id": "ai_apprentice",
+      "title": "AI Apprentice",
+      "description": "Build your first AI-powered script",
+      "icon": "🤖",
+      "condition": "complete_module_5"
+    },
+    {
+      "id": "automation_artist",
+      "title": "Automation Artist",
+      "description": "Complete 5 automation tasks",
+      "icon": "⚡",
+      "condition": "complete_tasks_5"
+    },
+    {
+      "id": "streak_master",
+      "title": "Streak Master",
+      "description": "Maintain a 7-day learning streak",
+      "icon": "🔥",
+      "condition": "streak_7"
+    }
+  ]
+}

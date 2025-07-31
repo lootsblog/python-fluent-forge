@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 declare global {
   interface Window {
-    Sk: any;
+    pyodide: any;
   }
 }
 
@@ -30,42 +30,42 @@ export function PythonEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    // Load Skulpt dynamically
-    const loadSkulpt = () => {
-      if (window.Sk) {
-        console.log('Skulpt already loaded');
+    // Load Pyodide dynamically
+    const loadPyodide = async () => {
+      if (window.pyodide) {
+        console.log('Pyodide already loaded');
         return;
       }
       
-      console.log('Loading Skulpt...');
-      const script1 = document.createElement('script');
-      script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/skulpt/0.11.1/skulpt.min.js';
-      script1.onload = () => {
-        console.log('Skulpt main script loaded');
-        const script2 = document.createElement('script');
-        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/skulpt/0.11.1/skulpt-stdlib.js';
-        script2.onload = () => {
-          console.log('Skulpt stdlib loaded, Python ready!');
+      console.log('Loading Pyodide...');
+      try {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
+        script.onload = async () => {
+          console.log('Pyodide script loaded, initializing...');
+          try {
+            window.pyodide = await (window as any).loadPyodide();
+            console.log('Pyodide ready!');
+          } catch (err) {
+            console.error('Failed to initialize Pyodide:', err);
+          }
         };
-        script2.onerror = () => {
-          console.error('Failed to load Skulpt stdlib');
+        script.onerror = () => {
+          console.error('Failed to load Pyodide script');
         };
-        document.head.appendChild(script2);
-      };
-      script1.onerror = () => {
-        console.error('Failed to load Skulpt main script');
-      };
-      
-      document.head.appendChild(script1);
+        document.head.appendChild(script);
+      } catch (err) {
+        console.error('Error loading Pyodide:', err);
+      }
     };
 
-    loadSkulpt();
+    loadPyodide();
   }, []);
 
   const runCode = async () => {
-    console.log('Skulpt available:', !!window.Sk, 'isRunning:', isRunning);
-    if (!window.Sk || isRunning) {
-      if (!window.Sk) {
+    console.log('Pyodide available:', !!window.pyodide, 'isRunning:', isRunning);
+    if (!window.pyodide || isRunning) {
+      if (!window.pyodide) {
         setOutput('Error: Python interpreter is still loading. Please wait a moment and try again.');
       }
       return;
@@ -75,25 +75,28 @@ export function PythonEditor({
     setOutput('');
 
     try {
-      let outputText = '';
+      // Capture stdout
+      const result = window.pyodide.runPython(`
+import sys
+from io import StringIO
+
+# Capture stdout
+old_stdout = sys.stdout
+sys.stdout = StringIO()
+
+try:
+${code.split('\n').map(line => `    ${line}`).join('\n')}
+    
+    output = sys.stdout.getvalue()
+    sys.stdout = old_stdout
+    output
+except Exception as e:
+    sys.stdout = old_stdout
+    raise e
+      `);
       
-      window.Sk.configure({
-        output: (text: string) => {
-          outputText += text;
-        },
-        read: (x: string) => {
-          if (window.Sk.builtinFiles === undefined || window.Sk.builtinFiles["files"][x] === undefined)
-            throw "File not found: '" + x + "'";
-          return window.Sk.builtinFiles["files"][x];
-        }
-      });
-
-      await window.Sk.misceval.asyncToPromise(() => {
-        return window.Sk.importMainWithBody("<stdin>", false, code, true);
-      });
-
-      setOutput(outputText || 'Code executed successfully (no output)');
-      onRun?.(outputText);
+      setOutput(result || 'Code executed successfully (no output)');
+      onRun?.(result);
     } catch (err: any) {
       const errorMsg = err.toString();
       setOutput(`Error: ${errorMsg}`);
